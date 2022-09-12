@@ -1,160 +1,71 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using ForumSystem.Data;
-using ForumSystem.Data.Models;
+﻿
 
 namespace ForumSystem.Controllers
 {
+    using ForumSystem.Data;
+    using ForumSystem.Data.Models;
+    using ForumSystem.Models.Posts;
+    using Microsoft.AspNetCore.Mvc;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class PostsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext data;
 
-        public PostsController(ApplicationDbContext context)
+        public PostsController(ApplicationDbContext data)
         {
-            _context = context;
+            this.data = data;
         }
 
-        // GET: Posts
-        public async Task<IActionResult> AllPosts()
-        {
-            var applicationDbContext = _context.Posts.Include(p => p.Category);
-            return View(await applicationDbContext.ToListAsync());
-        }
 
-        // GET: Posts/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet]
+        public IActionResult Add()
         {
-            if (id == null)
+            return View(new AddPostFormModel
             {
-                return NotFound();
-            }
-
-            var post = await _context.Posts
-                .Include(p => p.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            return View(post);
+                Categories = this.GetPostCategories()
+            });
         }
 
-        // GET: Posts/Create
-        public IActionResult Create()
-        {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id");
-            return View();
-        }
-
-        // POST: Posts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId")] Post post)
+        public IActionResult Add(AddPostFormModel post)
         {
-            if (ModelState.IsValid)
+
+            var postData = new Post
             {
-                _context.Add(post);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", post.CategoryId);
-            return View(post);
+                Title=post.Title,
+                Content=post.Content,
+                CategoryId=post.CategoryId
+             
+            };
+
+            this.data.Posts.Add(postData);
+            this.data.SaveChanges();
+
+            return RedirectToAction("Index", "Home");
+            
+            
         }
 
-        // GET: Posts/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var post = await _context.Posts.FindAsync(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", post.CategoryId);
-            return View(post);
-        }
-
-        // POST: Posts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,CategoryId")] Post post)
-        {
-            if (id != post.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+        private IEnumerable<PostCategoryViewModel> GetPostCategories()
+        { 
+             var listCategories= this.data
+                .Categories
+                .Select(c => new PostCategoryViewModel
                 {
-                    _context.Update(post);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PostExists(post.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", post.CategoryId);
-            return View(post);
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToList();
+
+
+            return listCategories;
         }
 
-        // GET: Posts/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var post = await _context.Posts
-                .Include(p => p.Category)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            return View(post);
-        }
-
-        // POST: Posts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var post = await _context.Posts.FindAsync(id);
-            _context.Posts.Remove(post);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool PostExists(int id)
-        {
-            return _context.Posts.Any(e => e.Id == id);
-        }
     }
 }

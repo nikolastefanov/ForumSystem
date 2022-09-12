@@ -1,4 +1,6 @@
-﻿using ForumSystem.Models;
+﻿using ForumSystem.Data;
+using ForumSystem.Models;
+using ForumSystem.Models.Home;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,27 +13,45 @@ namespace ForumSystem.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext data;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext data)
         {
-            _logger = logger;
+            this.data = data;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return View(new ListCategoryViewModel
+            {
+                Categories = this.GetCategories()
+            });
+
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
+     
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+        private IEnumerable<CategoryViewModel> GetCategories()
+        {
+            var listCategories = this.data
+               .Categories
+               .Select(c => new CategoryViewModel
+               {
+                   Id = c.Id,
+                   Name = c.Name,
+                   ImageUrl=c.ImageUrl
+               })
+               .ToList();
+
+
+            return listCategories;
+        }
+
     }
 }
