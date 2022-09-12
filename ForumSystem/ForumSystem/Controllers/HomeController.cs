@@ -45,7 +45,8 @@ namespace ForumSystem.Controllers
                {
                    Id = c.Id,
                    Name = c.Name,
-                   ImageUrl=c.ImageUrl
+                   ImageUrl=c.ImageUrl,
+                   PostsCount = c.Posts.Count()
                })
                .ToList();
 

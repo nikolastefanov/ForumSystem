@@ -17,5 +17,7 @@ namespace ForumSystem.Models.Home
         public string ImageUrl { get; set; }
 
         public IEnumerable<Post> Posts { get; init; }
+
+        public int PostsCount { get; set; }
     }
 }
