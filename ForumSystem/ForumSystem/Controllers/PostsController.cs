@@ -50,6 +50,65 @@ namespace ForumSystem.Controllers
             
         }
 
+        public IActionResult AllPosts(int categoryId)
+        {
+
+            var allPosts=this.data
+                  .Categories
+                  .Select(c=>c.Id==categoryId)
+                  .Where(p=> new PostViewModel
+                  {
+                      Id = p.Id,
+                      Title = p.Title,
+                      Content = p.Content,
+                  }
+
+                  //var allPosts  = this.data
+                  //    .Posts
+                  //   .Select(p => new PostViewModel
+                  //   {
+                  //       Id=p.Id,
+                  //       Title = p.Title,
+                  //       Content = p.Content,
+                  //       CategoryId = p.CategoryId
+                  //   })              
+                  //   .ToList();
+
+
+            return View(new AllPostsViewModel
+            {
+                PostsCategory = allPosts
+            }) ;
+        }
+
+        [HttpGet]
+        public IActionResult PostUpdate(int postId)
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public IActionResult PostUpdate(PostViewModel post)
+        {
+            return View();
+        }
+
+        public IActionResult PostDelete(int postId)
+        {
+            var post = this.data
+                .Posts
+                .Where(p => p.Id == postId);
+
+            this.data.Posts.Remove((Post)post);
+
+            this.data.SaveChanges();
+
+            return Redirect("/Home/Index");
+        }
+
+
+
 
         private IEnumerable<PostCategoryViewModel> GetPostCategories()
         { 

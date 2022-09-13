@@ -1,0 +1,25 @@
+﻿@model AllPostsViewModel
+
+@{
+    ViewData["Title"] = "Posts Page";
+}
+
+
+
+@foreach (var post in Model.PostsCategory)
+{
+    <h3>@post.Title</h3>
+
+    <h4>@post.Content</h4>
+
+    <h5>@post.Id</h5>
+
+
+    <a class="btn btn-warning" href="/Posts/PostUpdate/@post.Id">Update</a>
+
+    <a type="button" class="btn btn-danger" href="/Posts/PostDelete/@post.Id">Delete</a>
+}
+
+
+
+
