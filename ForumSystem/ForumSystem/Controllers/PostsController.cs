@@ -51,29 +51,19 @@ namespace ForumSystem.Controllers
         }
 
         public IActionResult AllPosts(int categoryId)
-        {
+        {      
 
-            var allPosts=this.data
-                  .Categories
-                  .Select(c=>c.Id==categoryId)
-                  .Where(p=> new PostViewModel
-                  {
-                      Id = p.Id,
-                      Title = p.Title,
-                      Content = p.Content,
-                  }
-
-                  //var allPosts  = this.data
-                  //    .Posts
-                  //   .Select(p => new PostViewModel
-                  //   {
-                  //       Id=p.Id,
-                  //       Title = p.Title,
-                  //       Content = p.Content,
-                  //       CategoryId = p.CategoryId
-                  //   })              
-                  //   .ToList();
-
+           List<PostViewModel> allPosts  = this.data
+                .Posts
+                .Where(p=>p.CategoryId==categoryId)
+               .Select(p => new PostViewModel
+               {
+                   Id=p.Id,
+                   Title = p.Title,
+                   Content = p.Content,
+                   CategoryId = p.CategoryId
+               })              
+               .ToList();
 
             return View(new AllPostsViewModel
             {
@@ -98,9 +88,12 @@ namespace ForumSystem.Controllers
         {
             var post = this.data
                 .Posts
-                .Where(p => p.Id == postId);
+                .Where(p => p.Id == postId)
+                .FirstOrDefault();
 
-            this.data.Posts.Remove((Post)post);
+            
+
+            this.data.Posts.Remove(post);
 
             this.data.SaveChanges();
 
