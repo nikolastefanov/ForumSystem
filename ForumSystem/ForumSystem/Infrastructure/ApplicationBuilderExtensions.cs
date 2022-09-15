@@ -5,6 +5,7 @@ namespace ForumSystem.Infrastructure
     using ForumSystem.Data;
     using ForumSystem.Data.Models;
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
     using System;
@@ -12,28 +13,44 @@ namespace ForumSystem.Infrastructure
     using System.Linq;
     using System.Threading.Tasks;
 
+    using static WebConstants;
 
     public static class ApplicationBuilderExtensions
     {
         public static IApplicationBuilder PrepareDatabase(
             this IApplicationBuilder app)
         {
-             using var scopedServices = app.ApplicationServices.CreateScope();
-             
-             var data = scopedServices.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-             
-             data.Database.EnsureCreated();
+             using var serviceScope = app.ApplicationServices.CreateScope();
 
-          
+            // var data = scopedServices.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            var services = serviceScope.ServiceProvider;
 
-                SeedCategories(data);
-            
+            //data.Database.EnsureCreated();
+
+            MigrateDatabase(services);
+
+            SeedCategories(services);
+            SeedAdministrator(services);
+
 
             return app;
         }
-
-        private static void SeedCategories(ApplicationDbContext data)
+        private static void MigrateDatabase(IServiceProvider services)
         {
+            var data = services.GetRequiredService<ApplicationDbContext>();
+
+            //data.Database.Migrate();
+            data.Database.EnsureCreated();
+
+        }
+
+
+
+        private static void SeedCategories(IServiceProvider services)
+        {
+            var data = services.GetRequiredService<ApplicationDbContext>();
+
+
             if (!data.Categories.Any())
             {
                 data.Categories.AddRange(new[]
@@ -48,6 +65,42 @@ namespace ForumSystem.Infrastructure
             }
 
            
+        }
+
+
+        private static void SeedAdministrator(IServiceProvider services)
+        {
+            var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+            Task
+                .Run(async () =>
+                {
+                    if (await roleManager.RoleExistsAsync(AdministratorRoleName))
+                    {
+                        return;
+                    }
+
+                    var role = new IdentityRole { Name = AdministratorRoleName };
+
+                    await roleManager.CreateAsync(role);
+
+                    const string adminEmail = "admin@fs.com";
+                    const string adminPassword = "admin12";
+
+                    var user = new IdentityUser
+                    {
+                        Email = adminEmail,
+                        UserName = adminEmail,
+                        //FullName = "Admin"
+                    };
+
+                    await userManager.CreateAsync(user, adminPassword);
+
+                    await userManager.AddToRoleAsync(user, role.Name);
+                })
+                .GetAwaiter()
+                .GetResult();
         }
 
     }

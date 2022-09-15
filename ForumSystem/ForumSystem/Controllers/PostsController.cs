@@ -74,14 +74,40 @@ namespace ForumSystem.Controllers
         [HttpGet]
         public IActionResult PostUpdate(int postId)
         {
-            return View();
+            var postUp = this.data
+                .Posts
+                .Where(p => p.Id == postId)
+                .FirstOrDefault();
+
+            var postDetails = new EditPostFormModel
+            {
+
+                Id = postUp.Id,
+                Title = postUp.Title,
+                Content = postUp.Content,
+                CategoryId = postUp.CategoryId,
+                Categories = this.GetPostCategories()
+            };
+
+            return View(postDetails);
         }
 
 
         [HttpPost]
-        public IActionResult PostUpdate(PostViewModel post)
+        public IActionResult PostUpdate(int postId,EditPostFormModel post)
         {
-            return View();
+            var postData = this.data
+               .Posts
+               .Where(p => p.Id == postId)
+               .FirstOrDefault();
+
+            postData.Title = post.Title;
+            postData.Content = post.Content;
+            postData.CategoryId = post.CategoryId;
+
+            this.data.SaveChanges();
+
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult PostDelete(int postId)

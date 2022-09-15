@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ElYLkH28Wh1fl6AvbFvkALqPfp8aumVmbIWHP7jCSCg3bvw8ZMC/FGO25zGkm9TrWj5W6j3Obg0Vsu79F9OipA==",
+  "dgSpecHash": "ufIcG45MzjQCw1336LWYt4GeGUniasZTYYjnqNcjAUGwTemyd8FbB+ZqF16p29huoRz21rZTTSO5WLw8xVpEQA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\HP\\Documents\\Kurs_SoftUni\\AA_C#_ASP_NET_Core_may_2021_my\\5000_ForumSystem\\6ForumSystemPostDelete\\ForumSystem\\ForumSystem.csproj",
+  "projectFilePath": "C:\\Users\\HP\\Documents\\Kurs_SoftUni\\AA_C#_ASP_NET_Core_may_2021_my\\5000_ForumSystem\\8ForumSystemAdmin\\ForumSystem\\ForumSystem.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\HP\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\5.0.17\\microsoft.aspnetcore.cryptography.internal.5.0.17.nupkg.sha512",
