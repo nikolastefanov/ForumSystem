@@ -6148,11 +6148,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\HP\\Documents\\Kurs_SoftUni\\AA_C#_ASP_NET_Core_may_2021_my\\5000_ForumSystem\\8ForumSystemAdmin\\ForumSystem\\ForumSystem.csproj",
+      "projectUniqueName": "C:\\Users\\HP\\Documents\\Kurs_SoftUni\\AA_C#_ASP_NET_Core_may_2021_my\\5000_ForumSystem\\9ForumSystemAdminView\\ForumSystem\\ForumSystem.csproj",
       "projectName": "ForumSystem",
-      "projectPath": "C:\\Users\\HP\\Documents\\Kurs_SoftUni\\AA_C#_ASP_NET_Core_may_2021_my\\5000_ForumSystem\\8ForumSystemAdmin\\ForumSystem\\ForumSystem.csproj",
+      "projectPath": "C:\\Users\\HP\\Documents\\Kurs_SoftUni\\AA_C#_ASP_NET_Core_may_2021_my\\5000_ForumSystem\\9ForumSystemAdminView\\ForumSystem\\ForumSystem.csproj",
       "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\HP\\Documents\\Kurs_SoftUni\\AA_C#_ASP_NET_Core_may_2021_my\\5000_ForumSystem\\8ForumSystemAdmin\\ForumSystem\\obj\\",
+      "outputPath": "C:\\Users\\HP\\Documents\\Kurs_SoftUni\\AA_C#_ASP_NET_Core_may_2021_my\\5000_ForumSystem\\9ForumSystemAdminView\\ForumSystem\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",

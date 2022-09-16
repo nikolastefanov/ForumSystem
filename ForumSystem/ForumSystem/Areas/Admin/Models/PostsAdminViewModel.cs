@@ -2,6 +2,7 @@
 
 namespace ForumSystem.Areas.Admin.Models
 {
+    using ForumSystem.Models.Posts;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -10,7 +11,7 @@ namespace ForumSystem.Areas.Admin.Models
     public class PostsAdminViewModel
     {
 
-
+        public IEnumerable<PostViewModel> PostsCategory { get; set; }
 
     }
 }

@@ -2,6 +2,8 @@
 
 namespace ForumSystem.Areas.Admin.Controllers
 {
+    using ForumSystem.Data;
+    using ForumSystem.Models.Posts;
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Collections.Generic;
@@ -14,9 +16,31 @@ namespace ForumSystem.Areas.Admin.Controllers
     public class PostsController : AdminController
     {
 
+        private readonly ApplicationDbContext data;
+
+        public PostsController(ApplicationDbContext data)
+        {
+            this.data = data;
+        }
+
         public IActionResult All()
         {
-            return View();
+
+            List<PostViewModel> allPosts = this.data
+                 .Posts
+                .Select(p => new PostViewModel
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Content = p.Content,
+                    CategoryId = p.CategoryId
+                })
+                .ToList();
+
+            return View(new AllPostsViewModel
+            {
+                PostsCategory = allPosts
+            });
         }
     }
 }
