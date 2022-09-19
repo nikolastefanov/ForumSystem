@@ -4,6 +4,10 @@
     ViewData["Title"] = "Posts Page";
 }
 
+<div>categoryId=@Model.CategoryId</div>
+
+   <h1>Stop</h1>
+
 
 
 @foreach (var post in Model.PostsCategory)
@@ -14,6 +18,9 @@
 
     <h5>@post.Id</h5>
 
+    <h6>@post.CategoryId</h6>
+
+    @(ViewBag.category = post.CategoryId)
 
     <a class="btn btn-warning" href="/Posts/PostUpdate?postId=@post.Id">Update</a>
 
@@ -21,4 +28,20 @@
 }
 
 
-
+<div class="row mb-5">
+    <div class="col-md-6">
+        <a class="btn btn-primary "
+           asp-controller="Posts"
+           asp-action="AllPosts"
+           asp-route-categoryId="@ViewBag.category"
+           asp-route-currentPage="@(Model.CurrentPage - 1)"><<<</a>
+    </div>
+    <div class="col-md-6">
+        <a class="btn btn-primary float-right "
+           asp-controller="Posts"
+           asp-action="AllPosts"
+              asp-route-categoryId="@ViewBag.category"
+           asp-route-currentPage="@(Model.CurrentPage + 1)">>>></a>
+    </div>
+</div>
+    

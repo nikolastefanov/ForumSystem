@@ -36,38 +36,71 @@ namespace ForumSystem.Controllers
 
             var postData = new Post
             {
-                Title=post.Title,
-                Content=post.Content,
-                CategoryId=post.CategoryId
-             
+                Title = post.Title,
+                Content = post.Content,
+                CategoryId = post.CategoryId
+
             };
 
             this.data.Posts.Add(postData);
             this.data.SaveChanges();
 
             return RedirectToAction("Index", "Home");
-            
-            
+
+
         }
 
-        public IActionResult AllPosts(int categoryId)
-        {      
+        public IActionResult AllPosts(int categoryId,int currentPage)
+        {
 
-           List<PostViewModel> allPosts  = this.data
+            
+        
+
+            var postsLists = this.data
                 .Posts
-                .Where(p=>p.CategoryId==categoryId)
-               .Select(p => new PostViewModel
-               {
-                   Id=p.Id,
-                   Title = p.Title,
-                   Content = p.Content,
-                   CategoryId = p.CategoryId
-               })              
-               .ToList();
+                .Where(p => p.CategoryId == categoryId)
+                .ToList();
+
+
+            var lists=postsLists
+                .Skip((currentPage - 1) * AllPostsViewModel.PostsPerPage)
+                .Take(AllPostsViewModel.PostsPerPage)
+                .Select(p => new PostViewModel
+                 {
+                     Id=p.Id,
+                     Title = p.Title,
+                     Content = p.Content,
+                     CategoryId = p.CategoryId
+                 })              
+                 .ToList();
+
+
+
+            // List<PostViewModel> allPosts  = this.data
+            //      .Posts
+            //      /*.Skip((query.CurrentPage - 1) * AllPostsViewModel.PostsPerPage)
+            //      .Take(AllPostsViewModel.PostsPerPage)*/
+            //      .Where(p=>p.CategoryId==categoryId)
+            //     .Select(p => new PostViewModel
+            //     {
+            //         Id=p.Id,
+            //         Title = p.Title,
+            //         Content = p.Content,
+            //         CategoryId = p.CategoryId
+            //     })              
+            //     .ToList();
+
+
+
+
+            // AllPostsViewModel.CategoryId = categoryId;
+
+        
+            ;
 
             return View(new AllPostsViewModel
             {
-                PostsCategory = allPosts
+                PostsCategory = lists
             }) ;
         }
 

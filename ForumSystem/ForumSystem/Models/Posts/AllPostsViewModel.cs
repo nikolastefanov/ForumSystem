@@ -9,6 +9,14 @@ namespace ForumSystem.Models.Posts
 
     public class AllPostsViewModel
     {
+        public const int PostsPerPage = 2;
+
+        public int CurrentPage { get;  set; } = 1;
+
+        public int TotalPosts { get; set; }
+
+        public int CategoryId { get; set; }
+
 
         public IEnumerable<PostViewModel> PostsCategory { get; set; }
     }
