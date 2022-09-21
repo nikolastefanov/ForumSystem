@@ -27,6 +27,7 @@ namespace ForumSystem.Test.Controllers
             //Assert
 
             Assert.NotNull(result);
+
             Assert.IsType<ViewResult>(result);
         }
 

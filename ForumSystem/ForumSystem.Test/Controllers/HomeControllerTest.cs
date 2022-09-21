@@ -6,11 +6,42 @@ namespace ForumSystem.Test.Controllers
     using ForumSystem.Models.Home;
     using ForumSystem.Test.Mocks;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Caching.Memory;
+    using Moq;
     using System;
     using Xunit;
 
     public class HomeControllerTest
     {
+
+        [Fact]
+        public void IndexShouldCorrect()
+        {
+            //Arange
+            var data = DataBaseMock.Instance;
+            var iMemory = MemoryMock.Instance;
+
+       
+
+            HomeController homeController = new HomeController(data, iMemory);
+
+            //Act
+
+            var result = homeController.Index();
+            var resultError = homeController.Error();
+            var resultCategories = homeController.GetCategories();
+
+            //Assert
+
+            Assert.NotNull(result);
+            Assert.IsType<ViewResult>(result);
+            Assert.NotNull(resultError);
+            Assert.IsType<ViewResult>(resultError);
+            Assert.NotNull(resultCategories);
+
+        }
+
+
 
         [Fact]
         public void ErrorShouldREturnView()
