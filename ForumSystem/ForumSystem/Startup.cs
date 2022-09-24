@@ -52,6 +52,7 @@ namespace ForumSystem
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
 
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddControllersWithViews(options =>
                 {

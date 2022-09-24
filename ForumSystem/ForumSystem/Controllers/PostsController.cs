@@ -2,22 +2,24 @@
 
 namespace ForumSystem.Controllers
 {
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using ForumSystem.Data;
     using ForumSystem.Data.Models;
     using ForumSystem.Models.Posts;
     using Microsoft.AspNetCore.Mvc;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
 
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext data;
+        private readonly IMapper mapper;
 
-        public PostsController(ApplicationDbContext data)
+        public PostsController(ApplicationDbContext data, IMapper mapper)
         {
             this.data = data;
+            this.mapper = mapper;
         }
 
 
@@ -34,13 +36,16 @@ namespace ForumSystem.Controllers
         public IActionResult Add(AddPostFormModel post)
         {
 
-            var postData = new Post
-            {
-                Title = post.Title,
-                Content = post.Content,
-                CategoryId = post.CategoryId
 
-            };
+               var postData = new Post
+               {
+                   Title = post.Title,
+                   Content = post.Content,
+                   CategoryId = post.CategoryId
+             
+               };
+
+            
 
             this.data.Posts.Add(postData);
             this.data.SaveChanges();
@@ -112,15 +117,19 @@ namespace ForumSystem.Controllers
                 .Where(p => p.Id == postId)
                 .FirstOrDefault();
 
-            var postDetails = new EditPostFormModel
-            {
+            //   var postDetails = new EditPostFormModel
+            //   {
+            //
+            //       Id = postUp.Id,
+            //       Title = postUp.Title,
+            //       Content = postUp.Content,
+            //       CategoryId = postUp.CategoryId,
+            //       Categories = this.GetPostCategories()
+            //   };
 
-                Id = postUp.Id,
-                Title = postUp.Title,
-                Content = postUp.Content,
-                CategoryId = postUp.CategoryId,
-                Categories = this.GetPostCategories()
-            };
+            var postDetails = this.mapper.Map<EditPostFormModel>(postUp);
+
+            postDetails.Categories = this.GetPostCategories();
 
             return View(postDetails);
         }
@@ -164,14 +173,20 @@ namespace ForumSystem.Controllers
 
         private IEnumerable<PostCategoryViewModel> GetPostCategories()
         { 
-             var listCategories= this.data
+           // var listCategories= this.data
+           //    .Categories
+           //    .Select(c => new PostCategoryViewModel
+           //    {
+           //        Id = c.Id,
+           //        Name = c.Name
+           //    })
+           //    .ToList();
+
+            var listCategories = this.data
                 .Categories
-                .Select(c => new PostCategoryViewModel
-                {
-                    Id = c.Id,
-                    Name = c.Name
-                })
+                .ProjectTo<PostCategoryViewModel>((IConfigurationProvider)this.mapper)
                 .ToList();
+
 
 
             return listCategories;
